@@ -22,7 +22,6 @@ CREATE TABLE transactions (
     senderID INT NOT NULL ,
     FOREIGN KEY (senderID) REFERENCES users(userID),
     recipient varchar(255) NOT NULL,
-    FOREIGN KEY (recipient) REFERENCES users(email),
     description varchar(255) NOT NULL,
     amount int NOT NULL,
     bankAccountID INT NOT NULL,
