@@ -3,7 +3,6 @@ package org.oc.paymybuddy;
 import org.oc.paymybuddy.model.BankAccount;
 import org.oc.paymybuddy.model.Transaction;
 import org.oc.paymybuddy.model.User;
-import org.oc.paymybuddy.repository.UserRepository;
 import org.oc.paymybuddy.service.BankAccountService;
 import org.oc.paymybuddy.service.TransactionService;
 import org.oc.paymybuddy.service.UserService;
