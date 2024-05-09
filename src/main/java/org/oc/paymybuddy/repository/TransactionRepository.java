@@ -8,5 +8,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 @EnableJpaRepositories
 public interface TransactionRepository extends JpaRepository<Transaction, Integer> {
+    boolean existsByTransactionID(Integer ID);
+
+
+    Transaction getTransactionBySenderIDAndAmountAndRecipient(Integer senderID, Integer amount, String recipient);
+    Iterable<Transaction> getTransactionBySenderID(Integer senderID);
+    Iterable<Transaction> getTransactionByBankAccountID(Integer bankAccountID);
+
+    Iterable<Transaction> getTransactionByRecipient(String recipient);
 
 }

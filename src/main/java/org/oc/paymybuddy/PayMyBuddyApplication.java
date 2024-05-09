@@ -32,7 +32,9 @@ public class PayMyBuddyApplication implements CommandLineRunner {
         Iterable<User> users = userService.getUsers();
         users.forEach(user -> System.out.println(user.getEmail()));
         User user = userService.create(new User("Val", "val@gmail.com", "Valou1234"));
-        System.out.println(user.getFirstName());
+        User updateUser = userService.getUserByEmailAndFirstName("user1@example.com", "User1" );
+        updateUser.setPassword("Update");
+        userService.update(updateUser);
         userService.getUsers().forEach(eachUser -> System.out.println(eachUser.getEmail()));
         userService.delete(user);
 

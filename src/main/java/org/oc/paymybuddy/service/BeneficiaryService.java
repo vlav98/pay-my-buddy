@@ -10,15 +10,29 @@ public class BeneficiaryService {
     @Autowired
     private BeneficiaryRepository beneficiaryRepository;
 
-    public Beneficiary create(Beneficiary beneficiary) {
-        return beneficiaryRepository.save(beneficiary);
+    public Beneficiary create(Beneficiary beneficiary) throws Exception {
+        boolean senderAlreadyHaveRecipient = beneficiaryRepository.existsBySenderAndRecipient(beneficiary.getSender(), beneficiary.getRecipient());
+        if (!senderAlreadyHaveRecipient) {
+            return beneficiaryRepository.save(beneficiary);
+        } else {
+            throw new Exception("The sender already added the recipient in their friends list.");
+        }
     }
 
-    public void delete(Beneficiary beneficiary) {
-        beneficiaryRepository.delete(beneficiary);
+    public void delete(Beneficiary beneficiary) throws Exception {
+        boolean senderAlreadyHaveRecipient = beneficiaryRepository.existsBySenderAndRecipient(beneficiary.getSender(), beneficiary.getRecipient());
+        if (senderAlreadyHaveRecipient) {
+            beneficiaryRepository.delete(beneficiary);
+        } else {
+            throw new Exception("The sender didn't add the recipient in their friends list.");
+        }
     }
 
     public Iterable<Beneficiary> getBeneficiaries() {
         return beneficiaryRepository.findAll();
+    }
+
+    public Iterable<Beneficiary> getBeneficiariesBySender(Beneficiary beneficiary) {
+        return beneficiaryRepository.findBeneficiariesBySender(beneficiary.getSender());
     }
 }
