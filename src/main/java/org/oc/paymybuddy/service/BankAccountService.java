@@ -10,12 +10,20 @@ public class BankAccountService {
     @Autowired
     private BankAccountRepository bankAccountRepository;
 
-    public BankAccount create(BankAccount bankAccount) {
-        return bankAccountRepository.save(bankAccount);
+    public BankAccount create(BankAccount bankAccount) throws Exception {
+        boolean accountExists = bankAccountRepository.existsByUserID(bankAccount.getUserID());
+        if (accountExists) throw new Exception("This user already have an account !");
+        else {
+            return bankAccountRepository.save(bankAccount);
+        }
     }
 
-    public void delete(BankAccount bankAccount) {
-        bankAccountRepository.delete(bankAccount);
+    public void delete(BankAccount bankAccount) throws Exception {
+        boolean accountExists = bankAccountRepository.existsByUserID(bankAccount.getUserID());
+        if (accountExists) bankAccountRepository.delete(bankAccount);
+        else {
+            throw new Exception("This bank account doesn't exist.");
+        }
     }
 
     public Iterable<BankAccount> getBankAccounts() {
