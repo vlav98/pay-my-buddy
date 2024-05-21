@@ -3,24 +3,29 @@ package org.oc.paymybuddy.service;
 import org.oc.paymybuddy.model.User;
 import org.oc.paymybuddy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.stream.Collectors;
-
 @Service
-public class UserService implements UserDetailsService {
+public class UserService {
     @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    @Autowired
+    private final BCryptPasswordEncoder passwordEncoder;
+
+    public UserService(UserRepository userRepository,
+                       BCryptPasswordEncoder passwordEncoder) {
+        this.userRepository  = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public User create(User user) throws Exception {
         boolean existingUser = userRepository.existsByEmail(user.getEmail());
         if (existingUser) {
             throw new Exception("The user already exists with this email.");
         }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -51,22 +56,4 @@ public class UserService implements UserDetailsService {
         return userRepository.findUserByEmailAndFirstName(email, firstName);
     }
 
-    /**
-     * @param email
-     * @return userDetails
-     * @throws UsernameNotFoundException
-     */
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found!");
-        }
-
-        return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
-                user.getPassword(),
-                user.getAuthorities().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())
-        );
-    }
 }

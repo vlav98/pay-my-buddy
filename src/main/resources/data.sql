@@ -2,6 +2,7 @@ DROP TABLE Transactions CASCADE;
 DROP TABLE bank_accounts CASCADE;
 DROP TABLE Beneficiary CASCADE;
 DROP TABLE Users CASCADE;
+
 CREATE TABLE users (
     userID int PRIMARY KEY NOT NULL AUTO_INCREMENT,
     first_name varchar(255) NOT NULL,
