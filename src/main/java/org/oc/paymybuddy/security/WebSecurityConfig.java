@@ -22,7 +22,6 @@ public class WebSecurityConfig {
     @Autowired
     private UserRepository userRepository;
 
-
     @Bean
     public UserDetailsService userDetailsService() {
         return new CustomUserDetailsService(userRepository);
@@ -43,10 +42,6 @@ public class WebSecurityConfig {
         providerManager.setEraseCredentialsAfterAuthentication(false);
 
         return providerManager;
-//        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-//        authProvider.setUserDetailsService(userDetailsService());
-//        authProvider.setPasswordEncoder(passwordEncoder());
-//        return new ProviderManager(authProvider);
     }
 
 
@@ -73,6 +68,7 @@ public class WebSecurityConfig {
                     .usernameParameter("email")
                     .passwordParameter("password")
                     .defaultSuccessUrl("/", true))
+            .rememberMe(rememberMeConfigurer -> rememberMeConfigurer.userDetailsService(userDetailsService()))
             .logout((logout) -> logout
                     .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                     .logoutSuccessUrl("/login?logout")
