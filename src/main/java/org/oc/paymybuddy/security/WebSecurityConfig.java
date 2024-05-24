@@ -56,23 +56,23 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
-            authorizationManagerRequestMatcherRegistry
-            .requestMatchers("/admin/**").hasAnyRole("ADMIN")
-            .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
-            .requestMatchers("/login", "/signup").permitAll()
-            .anyRequest().authenticated())
-            .httpBasic(Customizer.withDefaults())
-            .formLogin((form) -> form
-                    .loginPage("/login")
-                    .usernameParameter("email")
-                    .passwordParameter("password")
-                    .defaultSuccessUrl("/", true))
-            .rememberMe(rememberMeConfigurer -> rememberMeConfigurer.userDetailsService(userDetailsService()))
-            .logout((logout) -> logout
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                    .logoutSuccessUrl("/login?logout")
-                    .invalidateHttpSession(true));
+        http.authenticationProvider(authenticationProvider())
+            .authorizeHttpRequests((requests) ->
+            requests
+                .requestMatchers("/login", "/signup").permitAll()
+                .anyRequest().authenticated())
+                .httpBasic(Customizer.withDefaults())
+                .formLogin((form) -> form
+                        .loginPage("/login")
+                        .usernameParameter("email")
+                        .passwordParameter("password")
+                        .defaultSuccessUrl("/", true))
+                .rememberMe(rememberMeConfigurer -> rememberMeConfigurer.userDetailsService(userDetailsService()))
+                .logout((logout) -> logout
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                        .logoutSuccessUrl("/login?logout")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID"));
         return http.build();
     }
 
