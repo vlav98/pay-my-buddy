@@ -46,18 +46,12 @@ public class UserControllerTests {
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
-    private AuthenticationManager authenticationManager;
-    @MockBean
-    private CustomUserDetailsService userDetailsService;
-    @Autowired
     private WebApplicationContext webApplicationContext;
 
     @Autowired
     private MockMvc mockMvc;
 
-    private static User sender = new User();
-    private static User recipient = new User();
-
+    private static final User sender = new User();
     @Autowired
     private WebApplicationContext context;
 
@@ -74,10 +68,6 @@ public class UserControllerTests {
         sender.setFirstName("Sender User");
         sender.setEmail("sender@test.com");
         sender.setPassword("SenderPwd");
-
-        recipient.setFirstName("Recipient User");
-        recipient.setEmail("recipient@test.com");
-        recipient.setPassword("RecipientPwd");
     }
 
     @Test
@@ -123,8 +113,6 @@ public class UserControllerTests {
     @WithMockUser(username = "anon", roles = {"GUEST"})
     public void canNotUpdateExistingUser() throws Exception {
         // GIVEN
-//        Exception exception = new Exception();
-//        doThrow(exception).when(userService).update(sender);
         // WHEN
         // THEN
         mockMvc.perform(patch("/user")
