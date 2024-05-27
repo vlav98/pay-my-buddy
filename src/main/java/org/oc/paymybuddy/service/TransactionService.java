@@ -1,15 +1,18 @@
 package org.oc.paymybuddy.service;
 
+import jakarta.transaction.Transactional;
 import org.oc.paymybuddy.model.Transaction;
 import org.oc.paymybuddy.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+//@Transactional -> par méthode
 public class TransactionService {
     @Autowired
     private TransactionRepository transactionRepository;
 
+    @Transactional
     public Transaction create(Transaction transaction) {
         return transactionRepository.save(transaction);
     }
