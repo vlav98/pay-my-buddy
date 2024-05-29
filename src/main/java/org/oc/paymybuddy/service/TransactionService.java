@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.oc.paymybuddy.model.Transaction;
 import org.oc.paymybuddy.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,7 +14,10 @@ public class TransactionService {
     private TransactionRepository transactionRepository;
 
     @Transactional
-    public Transaction create(Transaction transaction) {
+    public Transaction create(User sender, User receiver, Transaction transaction) throws Exception {
+        if (transaction.getAmount() <= 0) {
+            throw new Exception("Transaction can't be negative or equal to 0");
+        }
         return transactionRepository.save(transaction);
     }
 
