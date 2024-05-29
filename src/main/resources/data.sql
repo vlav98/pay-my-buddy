@@ -8,7 +8,7 @@ CREATE TABLE users (
     first_name varchar(255) NOT NULL,
     email varchar(255) NOT NULL,
     password varchar(255) NOT NULL,
-    amount int NOT NULL
+    balance int NOT NULL
 );
 
 CREATE TABLE bank_accounts (

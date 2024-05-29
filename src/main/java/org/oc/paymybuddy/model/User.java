@@ -24,8 +24,8 @@ public class User {
     private String email;
     @Column(name = "password")
     private String password;
-    @Column(name = "amount")
-    private Integer amount;
+    @Column(name = "balance")
+    private Integer balance;
     @ElementCollection
     private List<String> authorities;
 
