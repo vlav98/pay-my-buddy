@@ -1,36 +1,35 @@
 package org.oc.paymybuddy.controller;
 
-import org.apache.coyote.BadRequestException;
 import org.oc.paymybuddy.model.User;
 import org.oc.paymybuddy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
-@RequestMapping(produces = "application/json")
+@RequestMapping("/user")
 public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping(value = "/user")
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public User signUp(@RequestBody User user) throws Exception {
         return userService.create(user);
     }
 
-    @PatchMapping(value = "/user")
+    @PatchMapping()
     public void update(@RequestBody User user) throws Exception {
         userService.update(user);
     }
 
-    @DeleteMapping("/admin/user")
+    @DeleteMapping()
     public void delete(@RequestBody User user) throws Exception {
         userService.delete(user);
     }
 
-    @GetMapping(value = "/users")
+    @GetMapping()
     public Iterable<User> getAllUsers() {
         return userService.getUsers();
     }

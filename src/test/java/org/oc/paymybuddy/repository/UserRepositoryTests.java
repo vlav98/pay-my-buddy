@@ -12,9 +12,7 @@ public class UserRepositoryTests {
     private UserRepository userRepository;
 
     @Test
-    public void whenInvalidEntityIsCreated_thenDataException() {
-//        userRepository.save(new User());
-        // DataIntegrityViolationException.class
+    public void noTest() {
 
     }
 }

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{fragments/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{msg.signIn}"></title>
+</head>
+<body>
+<div layout:fragment="content" th:remove="tag" class="container p-3 rounded">
+    <div class="align-items-center py-4 px-5 bg-body-tertiary col-6 mx-auto">
+    <form id="signup-form"
+          th:action="@{/signup}"
+          th:object="${user}"
+          method="post" >
+        <div class="form-group mb-3">
+            <label for="firstName" th:text="#{user.first_name}"></label>
+            <input type="text"
+                   name="" id="firstName"
+                   class="form-control"
+                   placeholder=""
+                   aria-describedby="helpId"
+                   th:field="*{firstName}"
+            />
+        </div>
+        <div class="form-group mb-3">
+            <label for="email" th:text="#{user.email}"></label>
+            <input type="email" class="form-control"
+                   name="email" id="email"
+                   aria-describedby="emailHelpId"
+                   placeholder=""
+                   th:field="*{email}"
+            />
+        </div>
+        <div class="form-group mb-3">
+            <label for="password" th:text="#{user.password}"></label>
+            <input type="password"
+                   class="form-control"
+                   name="password" id="password"
+                   placeholder=""
+                   th:field="*{password}"
+            />
+        </div>
+        <button type="submit" name="signup" id="signup"
+                class="btn btn-primary btn-lg btn-block" th:text="#{msg.signUp}">
+        </button>
+    </form>
+    </div>
+</div>
+</body>
+</html>
