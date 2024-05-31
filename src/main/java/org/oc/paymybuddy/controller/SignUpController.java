@@ -19,11 +19,8 @@ public class SignUpController {
     private static final Logger logger = LogManager.getLogger(SignUpController.class.getName());
 
     @GetMapping
-    public String showSignUpPage(String firstName, String email, String password, Model model) {
+    public String showSignUpPage(Model model) {
         model.addAttribute("user", new User());
-        model.addAttribute(firstName);
-        model.addAttribute(email);
-        model.addAttribute(password);
         return "signup";
     }
 

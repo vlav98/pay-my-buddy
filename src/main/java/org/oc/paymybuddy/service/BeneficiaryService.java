@@ -1,6 +1,7 @@
 package org.oc.paymybuddy.service;
 
 import org.oc.paymybuddy.model.Beneficiary;
+import org.oc.paymybuddy.model.User;
 import org.oc.paymybuddy.repository.BeneficiaryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class BeneficiaryService {
         return beneficiaryRepository.findAll();
     }
 
-    public Iterable<Beneficiary> getBeneficiariesBySender(Beneficiary beneficiary) {
-        return beneficiaryRepository.findBeneficiariesBySender(beneficiary.getSender());
+    public Iterable<Beneficiary> getBeneficiariesBySender(User sender) {
+        return beneficiaryRepository.findBeneficiariesBySender(sender.getUserID());
     }
 }

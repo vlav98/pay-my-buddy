@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @Entity
@@ -20,7 +22,7 @@ public class Transaction {
     @Column(name = "description")
     private String description;
     @Column(name = "amount")
-    private Integer amount;
+    private BigDecimal amount;
     @Column(name = "bank_accountID")
     private Integer bankAccountID;
 }

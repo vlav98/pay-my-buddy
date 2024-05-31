@@ -1,10 +1,10 @@
 package org.oc.paymybuddy.model;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,7 +25,7 @@ public class User {
     @Column(name = "password")
     private String password;
     @Column(name = "balance")
-    private Integer balance;
+    private BigDecimal balance;
     @ElementCollection
     private List<String> authorities;
 

@@ -3,8 +3,11 @@ package org.oc.paymybuddy.service;
 import org.oc.paymybuddy.model.User;
 import org.oc.paymybuddy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -48,12 +51,21 @@ public class UserService {
         }
     }
 
+    public User getAuthenticatedUser() throws Exception {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (getUserByEmail(username).isEmpty()) {
+            throw new Exception("This email : " + username + " doesn't match any account");
+        }
+
+        return getUserByEmail(username).get();
+    }
+
     public Iterable<User> getUsers() {
         return userRepository.findAll();
     }
 
-    public User getUserByEmailAndFirstName(String email, String firstName) {
-        return userRepository.findUserByEmailAndFirstName(email, firstName);
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
 }
