@@ -5,6 +5,8 @@ import org.oc.paymybuddy.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Role;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -15,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -60,6 +63,10 @@ public class WebSecurityConfig {
             .authorizeHttpRequests((requests) ->
             requests
                 .requestMatchers("/login", "/signup").permitAll()
+                .requestMatchers(antMatcher(HttpMethod.POST, "/user")).permitAll()
+                .requestMatchers(antMatcher(HttpMethod.PATCH, "/user")).hasRole("ADMIN")
+                .requestMatchers(antMatcher(HttpMethod.DELETE, "/user")).hasRole("ADMIN")
+                .requestMatchers(antMatcher(HttpMethod.GET, "/user")).hasRole("ADMIN")
                 .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .formLogin((form) -> form
