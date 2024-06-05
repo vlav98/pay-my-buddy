@@ -21,4 +21,9 @@ public class FragmentsController {
 
         return "profile";
     }
+
+    @GetMapping("/contact")
+    public String getContact() {
+        return "contact";
+    }
 }
