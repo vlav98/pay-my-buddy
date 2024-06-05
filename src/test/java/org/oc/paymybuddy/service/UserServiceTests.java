@@ -19,8 +19,6 @@ public class UserServiceTests {
     @MockBean
     private UserRepository userRepository;
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
-    @Autowired
     private UserService userService;
     private static final User user = new User();
 
@@ -73,7 +71,7 @@ public class UserServiceTests {
     }
 
     @Test
-    public void canNotUpdateUser() throws Exception {
+    public void canNotUpdateUser() {
         // GIVEN
         Mockito.when(userRepository.findUserByEmail(user.getEmail())).thenReturn(null);
         // WHEN
