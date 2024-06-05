@@ -9,44 +9,83 @@
 </head>
 <body>
 <div layout:fragment="content" th:remove="tag" class="container p-3 rounded">
-    <div class="align-items-center py-4 px-5 bg-body-tertiary col-6 mx-auto">
-    <form id="signup-form"
-          th:action="@{/signup}"
-          th:object="${user}"
-          method="post" >
-        <div class="form-group mb-3">
-            <label for="firstName" th:text="#{user.first_name}"></label>
-            <input type="text"
-                   name="" id="firstName"
-                   class="form-control"
-                   placeholder=""
-                   aria-describedby="helpId"
-                   th:field="*{firstName}"
-            />
+    <div class="container align-items-center mx-auto">
+    <div class="container bg-body-tertiary rounded px-5 py-3">
+        <form id="signup-form"
+              th:action="@{/signup}"
+              th:object="${user}"
+              method="post" >
+            <div class="form-group mb-3">
+                <label for="firstName" th:text="#{user.first_name}"></label>
+                <input type="text"
+                       name="" id="firstName"
+                       class="form-control"
+                       placeholder=""
+                       aria-describedby="helpId"
+                       th:field="*{firstName}"
+                />
+            </div>
+            <div class="form-group mb-3">
+                <label for="lastName" th:text="#{user.last_name}"></label>
+                <input type="text"
+                       name="" id="lastName"
+                       class="form-control"
+                       placeholder=""
+                       aria-describedby="helpId"
+                       th:field="*{lastName}"
+                />
+            </div>
+            <div class="form-group mb-3">
+                <label for="email" th:text="#{user.email}"></label>
+                <input type="email" class="form-control"
+                       name="email" id="email"
+                       aria-describedby="emailHelpId"
+                       placeholder=""
+                       th:field="*{email}"
+                />
+            </div>
+            <div class="form-group mb-3">
+                <label for="password" class="form-label"  th:text="#{user.password}"></label>
+                <div class="input-group">
+                    <input type="password"
+                           class="form-control password-field"
+                           name="password"
+                           id="password"
+                    >
+                    <span class="input-group-btn">
+                        <button type="button" class="btn border" id="togglePassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group mb-3">
+            <button type="submit" name="signup" id="signup"
+                    class="btn btn-primary btn-block" th:text="#{msg.signUp}">
+            </button>
+            </div>
+        </form>
+
+        <div class="row d-flex mx-auto my-auto">
+            <div class="col"><p class="text-center" th:text="#{signup.haveAccount}"></p></div>
+            <div class="col"><a th:href="@{/login}" href="/login" th:text="#{form.login}"></a></div>
         </div>
-        <div class="form-group mb-3">
-            <label for="email" th:text="#{user.email}"></label>
-            <input type="email" class="form-control"
-                   name="email" id="email"
-                   aria-describedby="emailHelpId"
-                   placeholder=""
-                   th:field="*{email}"
-            />
-        </div>
-        <div class="form-group mb-3">
-            <label for="password" th:text="#{user.password}"></label>
-            <input type="password"
-                   class="form-control"
-                   name="password" id="password"
-                   placeholder=""
-                   th:field="*{password}"
-            />
-        </div>
-        <button type="submit" name="signup" id="signup"
-                class="btn btn-primary btn-lg btn-block" th:text="#{msg.signUp}">
-        </button>
-    </form>
     </div>
+    </div>
+
+    <script type="text/javascript">
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordField = document.getElementById('password');
+            const icon = document.querySelector('#togglePassword i');
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                icon.className = 'fas fa-eye';
+            } else {
+                passwordField.type = "password";
+                icon.className = 'fas fa-eye-slash';
+            }
+        });
+    </script>
 </div>
 </body>
 </html>

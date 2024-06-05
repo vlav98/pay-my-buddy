@@ -33,7 +33,7 @@ public class UserService {
     }
 
     public void delete(User user) throws Exception {
-        boolean existingUser = userRepository.existsByEmailAndFirstName(user.getEmail(), user.getFirstName());
+        boolean existingUser = userRepository.existsByEmail(user.getEmail());
         if (existingUser) {
             userRepository.delete(user);
         } else {
@@ -42,7 +42,7 @@ public class UserService {
     }
 
     public void update(User user) throws Exception {
-        User existingUser = userRepository.findUserByEmailAndFirstName(user.getEmail(), user.getFirstName());
+        User existingUser = userRepository.findUserByEmail(user.getEmail());
         if (existingUser != null) {
             existingUser.setPassword(user.getPassword());
             userRepository.save(existingUser);

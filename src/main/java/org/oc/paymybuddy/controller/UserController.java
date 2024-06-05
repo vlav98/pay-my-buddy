@@ -22,7 +22,7 @@ public class UserController {
         return userService.create(user);
     }
 
-    @PatchMapping
+    @PutMapping
     public void update(@RequestBody User user) throws Exception {
         userService.update(user);
     }

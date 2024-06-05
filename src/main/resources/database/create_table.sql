@@ -6,6 +6,7 @@ DROP TABLE Users CASCADE;
 CREATE TABLE users (
     userID int PRIMARY KEY NOT NULL AUTO_INCREMENT,
     first_name varchar(255) NOT NULL,
+    last_name varchar(255) NOT NULL,
     email varchar(255) NOT NULL,
     password varchar(255) NOT NULL,
     balance DECIMAL(10,2) NOT NULL
