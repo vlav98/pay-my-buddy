@@ -1,5 +1,8 @@
 package org.oc.paymybuddy.service;
 
+import org.oc.paymybuddy.exceptions.AlreadyExistingUserException;
+import org.oc.paymybuddy.exceptions.InexistentUserException;
+import org.oc.paymybuddy.exceptions.NotAuthenticatedException;
 import org.oc.paymybuddy.model.User;
 import org.oc.paymybuddy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,38 +26,38 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User create(User user) throws Exception {
+    public User create(User user) throws AlreadyExistingUserException {
         boolean existingUser = userRepository.existsByEmail(user.getEmail());
         if (existingUser) {
-            throw new Exception("The user already exists with this email.");
+            throw new AlreadyExistingUserException();
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
-    public void delete(User user) throws Exception {
+    public void delete(User user) throws InexistentUserException {
         boolean existingUser = userRepository.existsByEmail(user.getEmail());
         if (existingUser) {
             userRepository.delete(user);
         } else {
-            throw new Exception("The user you're trying to delete doesn't exist.");
+            throw new InexistentUserException("The user you're trying to delete doesn't exist.");
         }
     }
 
-    public void update(User user) throws Exception {
+    public void update(User user) throws InexistentUserException {
         User existingUser = userRepository.findUserByEmail(user.getEmail());
         if (existingUser != null) {
             existingUser.setPassword(user.getPassword());
             userRepository.save(existingUser);
         } else {
-            throw new Exception("The user you're trying to update doesn't exist.");
+            throw new InexistentUserException("The user you're trying to update doesn't exist.");
         }
     }
 
-    public User getAuthenticatedUser() throws Exception {
+    public User getAuthenticatedUser() throws NotAuthenticatedException {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         if (getUserByEmail(username).isEmpty()) {
-            throw new Exception("This email : " + username + " doesn't match any account");
+            throw new NotAuthenticatedException("This email : " + username + " doesn't match any account");
         }
 
         return getUserByEmail(username).get();
