@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{fragments/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Confirmation</title>
+</head>
+<body>
+<div layout:fragment="content" th:remove="tag">
+    <div>
+        <div th:if="${error != null}"
+             class="alert alert-danger"
+             role="alert"
+             th:text="${error}"></div>
+        <div th:if="${successMessage}"
+             class="alert alert-success"
+             role="alert"
+             th:text="${successMessage}"></div>
+    </div>
+    <div class="container">
+    <h2>Confirm Payment</h2>
+    <form method="post" th:action="@{/transaction/pay}" th:object="${transactionForm}">
+        <div class="form-outline mb-3">
+        <label for="beneficiary" th:text="#{beneficiary.label}"></label>
+        <input class="form-control" name="beneficiary" id="beneficiary" th:field="*{recipient}"
+               th:value="*{recipient}"
+               disabled />
+        </div>
+        <div class="form-outline mb-3">
+            <label for="amount" th:text="#{balance.amount}"></label>
+            <input class="form-control" name="amount" id="amount" th:field="*{amount}"
+                   th:value="${transactionForm.amount}"
+                   disabled />
+        </div>
+        <div class="form-outline mb-3">
+            <label for="amountWithFee" th:text="#{balance.amount}"></label>
+            <input class="form-control" name="amountWithFee" id="amountWithFee" th:field="*{amountWithFee}"
+                   th:value="${amountWithFee}"
+                   disabled />
+        </div>
+        <div class="form-group mb-3">
+            <label for="description" th:text="Description">Description:</label>
+            <textarea id="description" name="description"
+                      class="form-control" rows="3"
+                      th:field="*{description}" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" name="action" value="payment">Confirm Payment</button>
+    </form>
+    </div>
+</div>
+</body>
+</html>
