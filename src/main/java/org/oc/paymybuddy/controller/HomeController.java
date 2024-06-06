@@ -24,8 +24,12 @@ public class HomeController {
     public String showHomePage(Model model) throws Exception {
         User connectedUser = userService.getAuthenticatedUser();
 
+        Iterable<User> beneficiaries = beneficiaryService.getBeneficiariesUserBySender(connectedUser);
+
         model.addAttribute("user", connectedUser);
         model.addAttribute("page", "home");
+        model.addAttribute("beneficiaries", beneficiaries);
+
         return "home";
     }
 }

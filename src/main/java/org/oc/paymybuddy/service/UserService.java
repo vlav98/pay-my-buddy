@@ -1,5 +1,7 @@
 package org.oc.paymybuddy.service;
 
+import jakarta.transaction.Transactional;
+import org.oc.paymybuddy.constants.Fee;
 import org.oc.paymybuddy.exceptions.AlreadyExistingUserException;
 import org.oc.paymybuddy.exceptions.InexistentUserException;
 import org.oc.paymybuddy.exceptions.NotAuthenticatedException;
@@ -10,6 +12,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Optional;
 
 @Service
@@ -61,6 +65,18 @@ public class UserService {
         }
 
         return getUserByEmail(username).get();
+    }
+
+    @Transactional
+    public void deposit(User user, BigDecimal amount) {
+        user.setBalance(user.getBalance().add(amount.setScale(Fee.SCALE, RoundingMode.HALF_UP)));
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void withdraw(User user, BigDecimal amount) {
+        user.setBalance(user.getBalance().subtract(amount.setScale(Fee.SCALE, RoundingMode.HALF_UP)));
+        userRepository.save(user);
     }
 
     public Iterable<User> getUsers() {

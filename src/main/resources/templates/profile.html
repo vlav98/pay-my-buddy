@@ -10,6 +10,17 @@
 <body>
 <div layout:fragment="content" th:remove="tag">
     <h2>My Profile</h2>
+    <div class="col mb-3" id="current-balance">
+        <div class="row mb-2" id="current-balance-title">
+            <h4>Current balance</h4>
+        </div>
+        <div class="container-fluid d-flex justify-content-between align-items-center" id="current-balance-body">
+            <div class="lead mr-auto" th:text="${user.balance}"></div>
+            <div class="justify-content-end">
+                <a class="btn btn-primary" th:href="@{/profile/update-balance}">Update balance</a>
+            </div>
+        </div>
+    </div>
     <div class="card">
         <div class="card-body">
             <table class="table table-striped">
