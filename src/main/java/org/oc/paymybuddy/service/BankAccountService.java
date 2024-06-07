@@ -29,4 +29,8 @@ public class BankAccountService {
     public Iterable<BankAccount> getBankAccounts() {
         return bankAccountRepository.findAll();
     }
+
+    public BankAccount getBankAccountByUserId(Integer userId) {
+        return bankAccountRepository.findBankAccountByUserID(userId);
+    }
 }

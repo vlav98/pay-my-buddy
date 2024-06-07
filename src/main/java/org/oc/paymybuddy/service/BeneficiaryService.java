@@ -22,14 +22,14 @@ public class BeneficiaryService {
     private UserRepository userRepository;
 
     @Transactional
-    public Beneficiary addNewBeneficiary(User user, String email) throws Exception {
+    public void addNewBeneficiary(User user, String email) throws Exception {
         Optional<User> beneficiaryToAdd = userRepository.findByEmail(email);
         if (beneficiaryToAdd.isEmpty()) {
             String errorMessage = "Email " + email + " does not match any buddy.";
             throw new BuddyNotFoundException(errorMessage);
         }
         User beneficiary = beneficiaryToAdd.get();
-        return create(newBeneficiary(user, beneficiary));
+        create(newBeneficiary(user, beneficiary));
     }
 
     public Beneficiary newBeneficiary(User user, User beneficiary) {

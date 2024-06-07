@@ -5,7 +5,7 @@
       layout:decorate="~{fragments/layout}">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="#{navigation.profile}">Profile</title>
 </head>
 <body>
 <div layout:fragment="content" th:remove="tag">
@@ -38,7 +38,9 @@
                 </tr>
                 <tr>
                     <th scope="row" th:text="#{user.password}"></th>
-                    <td><input type="password" class="form-control" disabled th:value="${user.password}" /></td>
+                    <td><label>
+                        <input type="password" class="form-control" disabled th:value="${user.password}" />
+                    </label></td>
                 </tr>
                 <tr>
                     <th scope="row"  th:text="#{user.amount}"></th>

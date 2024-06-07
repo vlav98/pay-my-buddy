@@ -14,39 +14,45 @@
              class="alert alert-danger"
              role="alert"
              th:text="${error}"></div>
-        <div th:if="${successMessage}"
-             class="alert alert-success"
-             role="alert"
-             th:text="${successMessage}"></div>
     </div>
     <div class="container">
     <h2>Confirm Payment</h2>
-    <form method="post" th:action="@{/transaction/pay}" th:object="${transactionForm}">
+    <form method="post"
+          th:action="@{/transaction/pay}"
+          th:object="${transactionForm}">
         <div class="form-outline mb-3">
-        <label for="beneficiary" th:text="#{beneficiary.label}"></label>
-        <input class="form-control" name="beneficiary" id="beneficiary" th:field="*{recipient}"
-               th:value="*{recipient}"
-               disabled />
+        <label class="form-label" for="recipientEmail" th:text="#{beneficiary.label}"></label>
+        <input type="email"
+               class="form-control"
+               name="recipientEmail" id="recipientEmail"
+               th:field="*{recipient}" th:value="${transactionForm.getRecipient()}"
+               th:placeholder="${transactionForm.recipient}"
+               readonly required />
         </div>
         <div class="form-outline mb-3">
-            <label for="amount" th:text="#{balance.amount}"></label>
-            <input class="form-control" name="amount" id="amount" th:field="*{amount}"
-                   th:value="${transactionForm.amount}"
-                   disabled />
+            <label class="form-label" for="amount" th:text="#{balance.amount}"></label>
+            <input type="number" step="0,01"
+                   class="form-control" name="amount" id="amount"
+                   th:field="*{amount}" th:value="${transactionForm.getAmount()}"
+                   readonly required />
         </div>
         <div class="form-outline mb-3">
-            <label for="amountWithFee" th:text="#{balance.amount}"></label>
-            <input class="form-control" name="amountWithFee" id="amountWithFee" th:field="*{amountWithFee}"
-                   th:value="${amountWithFee}"
-                   disabled />
+            <label class="form-label" for="amountWithFee" th:text="#{balance.amountWithFee}"></label>
+            <input type="number" step="0,01"
+                   class="form-control" name="amountWithFee" id="amountWithFee"
+                   th:field="*{amountWithFee}" th:value="${amountWithFee}"
+                   readonly required />
         </div>
         <div class="form-group mb-3">
-            <label for="description" th:text="Description">Description:</label>
-            <textarea id="description" name="description"
-                      class="form-control" rows="3"
-                      th:field="*{description}" required></textarea>
+            <label class="form-label" for="description" th:text="Description"></label>
+            <input type="text" id="description" name="description"
+                      class="form-control"
+                      th:field="*{description}" required />
         </div>
-        <button type="submit" class="btn btn-primary" name="action" value="payment">Confirm Payment</button>
+        <button type="submit"
+                class="btn btn-primary"
+                name="action"
+                value="payment">Confirm Payment</button>
     </form>
     </div>
 </div>

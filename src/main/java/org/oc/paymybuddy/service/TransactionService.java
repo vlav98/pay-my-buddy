@@ -3,14 +3,11 @@ package org.oc.paymybuddy.service;
 import jakarta.transaction.Transactional;
 import org.oc.paymybuddy.constants.Fee;
 import org.oc.paymybuddy.exceptions.InsufficientBalanceException;
-import org.oc.paymybuddy.exceptions.NotAuthenticatedException;
 import org.oc.paymybuddy.model.Transaction;
 import org.oc.paymybuddy.model.User;
 import org.oc.paymybuddy.repository.TransactionRepository;
-import org.oc.paymybuddy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +24,7 @@ public class TransactionService {
     @Autowired
     private PaginationService paginationService;
     @Autowired
-    private UserRepository userRepository;
+    private BankAccountService bankAccountService;
 
     @Transactional
     public Transaction create(User sender, User recipient, String description, double amount) throws Exception {
@@ -52,6 +49,7 @@ public class TransactionService {
 
         Transaction transaction = new Transaction();
         transaction.setDescription(description);
+        transaction.setBankAccountID(bankAccountService.getBankAccountByUserId(sender.getUserID()).getBankAccountID());
         transaction.setAmount(BigDecimal.valueOf(amount));
         transaction.setSenderID(sender.getUserID());
         transaction.setRecipient(recipient.getEmail());

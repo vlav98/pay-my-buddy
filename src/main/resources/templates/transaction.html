@@ -43,7 +43,8 @@
         <div class="flex-grow-1">
             <div class="container form-outline">
                 <label class="form-label" for="beneficiary" th:text="#{beneficiary.label}"></label>
-                <select class="form-select" name="beneficiary" id="beneficiary" th:field="*{recipient}" required>
+                <select class="form-select" name="beneficiary" id="beneficiary"
+                        th:field="*{recipient}" required>
                     <option value="" th:text="#{user.email}"></option>
                     <option th:each="beneficiaries: ${beneficiaries}"
                             th:value="${beneficiaries.getEmail()}"

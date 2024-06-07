@@ -86,7 +86,7 @@ public class TransactionController {
     }
 
     @GetMapping("/pay")
-    public String showPaymentPage(TransactionFormViewModel transactionFormViewModel, Model model) {
+    public String showPaymentPage(@ModelAttribute TransactionFormViewModel transactionFormViewModel, Model model) {
         model.addAttribute("page", "payment");
         model.addAttribute("transactionForm", transactionFormViewModel);
         return "payment";
@@ -98,27 +98,39 @@ public class TransactionController {
                       Model model,
                       RedirectAttributes redirectAttributes) {
         String recipientEmail = transactionFormViewModel.getRecipient();
+        System.out.println("recipient email " + recipientEmail);
+        System.out.println("description " +transactionFormViewModel.getDescription());
+        System.out.println("amount " +transactionFormViewModel.getAmount());
+        System.out.println("amount fee " +transactionFormViewModel.getAmountWithFee());
         try {
             model.addAttribute("page", "payment");
             switch (action) {
                 case "payment" -> {
-                    Optional<User> recipientUser = userService.getUserByEmail(recipientEmail);
+                    Optional<User> recipientUser = userService.getUserByEmail(transactionFormViewModel.getRecipient());
                     if (recipientUser.isEmpty()) {
                         String errorMessage = "Email " + recipientEmail + " does not match any buddy.";
                         throw new BuddyNotFoundException(errorMessage);
                     }
+
                     transactionService.create(userService.getAuthenticatedUser(),
                             recipientUser.get(),
                             transactionFormViewModel.getDescription(),
                             transactionFormViewModel.getAmount());
+
                     redirectAttributes.addFlashAttribute("success",
                             "You successfully transferred " + transactionFormViewModel.getAmount() + "€ to " + transactionFormViewModel.getRecipient());
                 }
                 case "redirect" -> {
+                    System.out.println("in redirect");
                     Map<String, BigDecimal> amountAndFee = transactionService.calculateAmountWithFee(
                             transactionFormViewModel.getAmount());
+                    transactionFormViewModel.setAmountWithFee(amountAndFee.get("amountWithFee").toBigInteger().doubleValue());
+                    System.out.println("amount and fee " + amountAndFee.toString());
+                    redirectAttributes.addFlashAttribute("recipient", recipientEmail);
+                    redirectAttributes.addFlashAttribute("amount", transactionFormViewModel.getAmount());
                     model.addAttribute("transactionForm", transactionFormViewModel);
                     model.addAttribute("amountWithFee", amountAndFee.get("amountWithFee"));
+
                     return "/payment";
                 }
             }
