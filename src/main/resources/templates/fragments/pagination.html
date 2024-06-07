@@ -20,7 +20,7 @@
         th:classappend="${pagedList.number == 0} ? 'disabled' : ''">
       <a class="page-link" aria-label="Previous"
          th:if="${!pagedList.first}"
-         th:href="@{${page == 'transfer' ? '/transfer' : '/profile' }(page=${pagedList.number}, size=${pagedList.size})}">
+         th:href="@{${page == 'transaction' ? '/transaction' : '/profile' }(page=${pagedList.number}, size=${pagedList.size})}">
         <span aria-hidden="true">&laquo;</span>
         <span class="sr-only" th:text="#{pagination.previous}"></span>
       </a>
@@ -34,7 +34,7 @@
       </a>
       <a class="page-link"
          th:if="${not (pagedList.number  == currentPage)}"
-         th:href="@{${page == 'transfer' ? '/transfer' : '/profile' }(page=${currentPage+1}, size=${pagedList.size})}">
+         th:href="@{${page == 'transaction' ? '/transaction' : '/profile' }(page=${currentPage+1}, size=${pagedList.size})}">
         <span th:text="${currentPage + 1}">1</span>
       </a>
     </li>
@@ -42,7 +42,7 @@
         th:classappend="${pagedList.number + 1 >= pagedList.totalPages} ? ' disabled' : ''">
       <a class="page-link" aria-label="Next"
          th:if="${!pagedList.last}"
-         th:href="@{${page == 'transfer' ? '/transfer' : '/profile' }(page=${pagedList.number+2}, size=${pagedList.size})}">
+         th:href="@{${page == 'transaction' ? '/transaction' : '/profile' }(page=${pagedList.number+2}, size=${pagedList.size})}">
         <span aria-hidden="true">&raquo;</span>
         <span class="sr-only" th:text="#{pagination.next}"></span>
       </a>

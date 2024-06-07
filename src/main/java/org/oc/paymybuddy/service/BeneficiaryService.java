@@ -3,10 +3,13 @@ package org.oc.paymybuddy.service;
 import jakarta.transaction.Transactional;
 import org.oc.paymybuddy.exceptions.BuddyNotFoundException;
 import org.oc.paymybuddy.model.Beneficiary;
+import org.oc.paymybuddy.model.Transaction;
 import org.oc.paymybuddy.model.User;
 import org.oc.paymybuddy.repository.BeneficiaryRepository;
 import org.oc.paymybuddy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,6 +23,8 @@ public class BeneficiaryService {
     private BeneficiaryRepository beneficiaryRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PaginationService paginationService;
 
     @Transactional
     public void addNewBeneficiary(User user, String email) throws Exception {
@@ -66,7 +71,7 @@ public class BeneficiaryService {
         return beneficiaryRepository.findBeneficiariesBySender(sender.getUserID());
     }
 
-    public Iterable<User> getBeneficiariesUserBySender(User sender) {
+    public List<User> getBeneficiariesUserBySender(User sender) {
         Iterable<Beneficiary> beneficiaries = beneficiaryRepository.findBeneficiariesBySender(sender.getUserID());
         List<User> usersList = new ArrayList<>();
         for (Beneficiary beneficiary : beneficiaries) {
@@ -88,5 +93,10 @@ public class BeneficiaryService {
         }
 
         return hasRecipientId;
+    }
+
+    public Page<?> findPaginatedResults(Pageable pageable, User user) {
+        List<User> users = getBeneficiariesUserBySender(user);
+        return paginationService.getPaginatedList(pageable, users);
     }
 }

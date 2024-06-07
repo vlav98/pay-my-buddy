@@ -1,9 +1,14 @@
 package org.oc.paymybuddy.controller;
 
+import org.oc.paymybuddy.constants.Pagination;
 import org.oc.paymybuddy.exceptions.NotAuthenticatedException;
+import org.oc.paymybuddy.model.Beneficiary;
 import org.oc.paymybuddy.model.User;
+import org.oc.paymybuddy.service.BeneficiaryService;
 import org.oc.paymybuddy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,11 +22,24 @@ import java.math.BigDecimal;
 public class FragmentsController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private BeneficiaryService beneficiaryService;
 
     @GetMapping("/profile")
-    public String getProfile(Model model) throws NotAuthenticatedException {
+    public String showProfile(Model model,
+                              @RequestParam(value = "page", required = false) Integer page,
+                              @RequestParam(value = "size", required = false) Integer size) throws Exception {
         User connectedUser = userService.getAuthenticatedUser();
 
+        int currentPage = page == null ? Pagination.DEFAULT_PAGE : page;
+        int pageSize = size == null ? Pagination.DEFAULT_SIZE : size;
+
+        Page<?> pagedList = beneficiaryService.findPaginatedResults(
+                PageRequest.of(currentPage -1, pageSize),
+                connectedUser);
+
+        model.addAttribute("totalBeneficiaryItems", pagedList.getTotalElements());
+        model.addAttribute("pagedList", pagedList);
         model.addAttribute("user", connectedUser);
         model.addAttribute("page", "profile");
 

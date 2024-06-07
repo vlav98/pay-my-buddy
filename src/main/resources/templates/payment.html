@@ -40,8 +40,8 @@
             <label class="form-label" for="amountWithFee" th:text="#{balance.amountWithFee}"></label>
             <input type="number" step="0,01"
                    class="form-control" name="amountWithFee" id="amountWithFee"
-                   th:field="*{amountWithFee}" th:value="${amountWithFee}"
-                   readonly required />
+                   th:field="*{amountWithFee}" th:value="${transactionForm.getAmountWithFee()}"
+                   required />
         </div>
         <div class="form-group mb-3">
             <label class="form-label" for="description" th:text="Description"></label>

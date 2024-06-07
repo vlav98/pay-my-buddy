@@ -5,6 +5,7 @@ import org.oc.paymybuddy.constants.Pagination;
 import org.oc.paymybuddy.exceptions.BuddyNotFoundException;
 import org.oc.paymybuddy.model.Transaction;
 import org.oc.paymybuddy.model.User;
+import org.oc.paymybuddy.model.dto.AmountAndFee;
 import org.oc.paymybuddy.model.viewModel.TransactionFormViewModel;
 import org.oc.paymybuddy.service.BeneficiaryService;
 import org.oc.paymybuddy.service.TransactionService;
@@ -44,7 +45,6 @@ public class TransactionController {
         User connectedUser = userService.getAuthenticatedUser();
         Iterable<User> beneficiaries = beneficiaryService.getBeneficiariesUserBySender(connectedUser);
 
-
         int currentPage = page == null ? Pagination.DEFAULT_PAGE : page;
         int pageSize = size == null ? Pagination.DEFAULT_SIZE : size;
 
@@ -54,6 +54,7 @@ public class TransactionController {
 
         model.addAttribute("pagedList", pagedList);
         model.addAttribute("totalTransactionItems", pagedList.getTotalElements());
+        model.addAttribute("page", "transaction");
 
         model.addAttribute("connectedUser", connectedUser);
         model.addAttribute("recipient", "beneficiary");
@@ -98,10 +99,6 @@ public class TransactionController {
                       Model model,
                       RedirectAttributes redirectAttributes) {
         String recipientEmail = transactionFormViewModel.getRecipient();
-        System.out.println("recipient email " + recipientEmail);
-        System.out.println("description " +transactionFormViewModel.getDescription());
-        System.out.println("amount " +transactionFormViewModel.getAmount());
-        System.out.println("amount fee " +transactionFormViewModel.getAmountWithFee());
         try {
             model.addAttribute("page", "payment");
             switch (action) {
@@ -121,15 +118,12 @@ public class TransactionController {
                             "You successfully transferred " + transactionFormViewModel.getAmount() + "€ to " + transactionFormViewModel.getRecipient());
                 }
                 case "redirect" -> {
-                    System.out.println("in redirect");
-                    Map<String, BigDecimal> amountAndFee = transactionService.calculateAmountWithFee(
+                    AmountAndFee amountAndFee = transactionService.calculateAmountWithFee(
                             transactionFormViewModel.getAmount());
-                    transactionFormViewModel.setAmountWithFee(amountAndFee.get("amountWithFee").toBigInteger().doubleValue());
-                    System.out.println("amount and fee " + amountAndFee.toString());
+                    transactionFormViewModel.setAmountWithFee(amountAndFee.getAmountWithFee().doubleValue());
                     redirectAttributes.addFlashAttribute("recipient", recipientEmail);
                     redirectAttributes.addFlashAttribute("amount", transactionFormViewModel.getAmount());
                     model.addAttribute("transactionForm", transactionFormViewModel);
-                    model.addAttribute("amountWithFee", amountAndFee.get("amountWithFee"));
 
                     return "/payment";
                 }

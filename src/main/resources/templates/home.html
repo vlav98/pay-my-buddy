@@ -24,13 +24,13 @@
     <table class="table">
         <thead>
             <tr>
-                <td class="col">Name</td>
-                <td class="col" >Email</td>
+                <td class="col" th:text="#{user.name}"></td>
+                <td class="col" th:text="#{user.email}"></td>
             </tr>
         </thead>
         <tbody>
         <tr th:each="beneficiary: ${beneficiaries}">
-            <td th:text="${beneficiary.firstName}"></td>
+            <td th:text="${#strings.concat(beneficiary.firstName, ' ', beneficiary.lastName)}"></td>
             <td th:text="${beneficiary.getEmail()}"></td>
         </tr>
         </tbody>

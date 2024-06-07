@@ -21,7 +21,7 @@
             </div>
         </div>
     </div>
-    <div class="card">
+    <div class="card mb-3">
         <div class="card-body">
             <table class="table table-striped">
                 <tbody>
@@ -37,18 +37,38 @@
                     <td th:text="${user.email}"></td>
                 </tr>
                 <tr>
-                    <th scope="row" th:text="#{user.password}"></th>
-                    <td><label>
-                        <input type="password" class="form-control" disabled th:value="${user.password}" />
-                    </label></td>
-                </tr>
-                <tr>
                     <th scope="row"  th:text="#{user.amount}"></th>
                     <td th:text="${user.balance}">€</td> </tr>
                 </tbody>
             </table>
         </div>
     </div>
+
+    <div class="container-fluid">
+        <h4 th:text="#{msg.ListBeneficiary}"></h4>
+        <table class="table">
+            <thead>
+            <tr>
+                <th th:text="#{user.name}"></th>
+                <th th:text="#{user.email}"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${pagedList.content == null}">
+                <td></td>
+                <td>
+                    You don't have any transactions yet.
+                </td>
+                <td></td>
+            </tr>
+            <tr th:each="beneficiary: ${pagedList.content}">
+                <td th:text="${#strings.concat(beneficiary.firstName, ' ', beneficiary.lastName)}"></td>
+                <td th:text="${beneficiary.email}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="beneficiary-pagination" th:insert="fragments/pagination :: pagination"></div>
 </div>
 </body>
 </html>

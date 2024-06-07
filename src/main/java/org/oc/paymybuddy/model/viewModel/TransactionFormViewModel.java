@@ -1,14 +1,12 @@
 package org.oc.paymybuddy.model.viewModel;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class TransactionFormViewModel {
     String recipient;
     double amount;

@@ -5,6 +5,7 @@ import org.oc.paymybuddy.constants.Fee;
 import org.oc.paymybuddy.exceptions.InsufficientBalanceException;
 import org.oc.paymybuddy.model.Transaction;
 import org.oc.paymybuddy.model.User;
+import org.oc.paymybuddy.model.dto.AmountAndFee;
 import org.oc.paymybuddy.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,7 +32,7 @@ public class TransactionService {
         if (amount <= 0) {
             throw new Exception("Transaction can't be negative or equal to 0");
         }
-        BigDecimal amountWithFees = calculateAmountWithFee(amount).get("amountWithFee");
+        BigDecimal amountWithFees = calculateAmountWithFee(amount).getAmountWithFee();
         if (sender.getBalance().compareTo(BigDecimal.valueOf(amount)) < 0) {
             throw new InsufficientBalanceException();
         }
@@ -78,13 +79,14 @@ public class TransactionService {
         return paginationService.getPaginatedList(pageable, transactions);
     }
 
-    public Map<String, BigDecimal> calculateAmountWithFee(double amount) {
-        HashMap<String, BigDecimal> amountAndFee = new HashMap<>();
+    public AmountAndFee calculateAmountWithFee(double amount) {
         BigDecimal bigDecimalAmount = new BigDecimal(Double.toString(amount)).setScale(Fee.SCALE, RoundingMode.HALF_UP);
         BigDecimal bigDecimalFee = new BigDecimal(Double.toString(amount * Fee.TRANSACTION_FEE)).setScale(Fee.SCALE, RoundingMode.HALF_UP);
-        amountAndFee.put("amount", bigDecimalAmount);
-        amountAndFee.put("fee", bigDecimalFee);
-        amountAndFee.put("amountWithFee", bigDecimalAmount.add(bigDecimalFee));
-        return amountAndFee;
+
+        return new AmountAndFee(
+                bigDecimalAmount,
+                bigDecimalFee,
+                bigDecimalAmount.add(bigDecimalFee)
+        );
     }
 }
