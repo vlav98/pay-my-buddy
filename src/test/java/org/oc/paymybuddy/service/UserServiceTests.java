@@ -1,16 +1,23 @@
 package org.oc.paymybuddy.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import org.oc.paymybuddy.constants.Fee;
 import org.oc.paymybuddy.model.User;
 import org.oc.paymybuddy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -66,7 +73,7 @@ public class UserServiceTests {
         // WHEN
         userService.delete(user);
         // THEN
-        Mockito.verify(userRepository).delete(user);
+        verify(userRepository).delete(user);
     }
 
     @Test
@@ -85,6 +92,47 @@ public class UserServiceTests {
         // WHEN
         userService.update(user);
         // THEN
-        Mockito.verify(userRepository).save(user);
+        verify(userRepository).save(user);
+    }
+
+
+
+    @Test
+    public void whenDeposit_thenBalanceIncreased() {
+        User user = new User();
+        user.setBalance(BigDecimal.valueOf(100.00));
+        BigDecimal depositAmount = BigDecimal.valueOf(50.00);
+
+        userService.deposit(user, depositAmount);
+
+        BigDecimal expectedBalance = BigDecimal.valueOf(150.00).setScale(Fee.SCALE, RoundingMode.HALF_UP);
+        assertEquals(expectedBalance, user.getBalance());
+        verify(userRepository, times(1)).save(user);
+    }
+
+    @Test
+    public void whenWithdraw_thenBalanceDecreased() {
+        User user = new User();
+        user.setBalance(BigDecimal.valueOf(100.00));
+        BigDecimal withdrawalAmount = BigDecimal.valueOf(50.00);
+
+        userService.withdraw(user, withdrawalAmount);
+
+        BigDecimal expectedBalance = BigDecimal.valueOf(50.00).setScale(Fee.SCALE, RoundingMode.HALF_UP);
+        assertEquals(expectedBalance, user.getBalance());
+        verify(userRepository, times(1)).save(user);
+    }
+
+    @Test
+    public void whenWithdrawMoreThanBalance_thenBalanceNegative() {
+        User user = new User();
+        user.setBalance(BigDecimal.valueOf(100.00));
+        BigDecimal withdrawalAmount = BigDecimal.valueOf(150.00);
+
+        userService.withdraw(user, withdrawalAmount);
+
+        BigDecimal expectedBalance = BigDecimal.valueOf(-50.00).setScale(Fee.SCALE, RoundingMode.HALF_UP);
+        assertEquals(expectedBalance, user.getBalance());
+        verify(userRepository, times(1)).save(user);
     }
 }

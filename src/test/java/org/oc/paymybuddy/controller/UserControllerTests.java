@@ -1,31 +1,25 @@
 package org.oc.paymybuddy.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.aspectj.lang.annotation.Before;
 import org.assertj.core.api.Assertions;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import static org.mockito.BDDMockito.willThrow;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.doThrow;
+import org.oc.paymybuddy.exceptions.AlreadyExistingUserException;
+import org.oc.paymybuddy.exceptions.NonexistentUserException;
 import org.oc.paymybuddy.model.User;
-import org.oc.paymybuddy.repository.UserRepository;
-import org.oc.paymybuddy.security.CustomUserDetails;
-import org.oc.paymybuddy.service.CustomUserDetailsService;
 import org.oc.paymybuddy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.test.context.support.WithMockUser;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,8 +28,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
-import java.util.Collections;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -97,7 +89,7 @@ public class UserControllerTests {
     @WithMockUser(username = "anon", roles = {"GUEST"})
     public void canNotSignUpExistingUser() throws Exception {
         // GIVEN
-        Exception exception = new Exception("The user already exists with this email.");
+        AlreadyExistingUserException exception = new AlreadyExistingUserException();
         Mockito.when(userService.create(sender)).thenThrow(exception);
         // WHEN
         // THEN
@@ -129,7 +121,7 @@ public class UserControllerTests {
         // GIVEN
         // WHEN
         // THEN
-        mockMvc.perform(patch("/user")
+        mockMvc.perform(put("/user")
                         .with(csrf())
                         .content(objectMapper.writeValueAsString(sender))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -142,11 +134,11 @@ public class UserControllerTests {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     public void canNotUpdateNonExistingUser() throws Exception {
         // GIVEN
-        Exception exception = new Exception("The user you're trying to update doesn't exist.");
+        NonexistentUserException exception = new NonexistentUserException();
         doThrow(exception).when(userService).update(sender);
         // WHEN
         // THEN
-        assertThrows(Exception.class, () -> mockMvc.perform(patch("/user")
+        assertThrows(Exception.class, () -> mockMvc.perform(put("/user")
                         .with(csrf())
                         .content(objectMapper.writeValueAsString(sender))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -186,7 +178,7 @@ public class UserControllerTests {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     public void canNotDeleteNonExistingUser() throws Exception {
         // GIVEN
-        Exception exception = new Exception("The user you're trying to delete doesn't exist.");
+        NonexistentUserException exception = new NonexistentUserException();
         doThrow(exception).when(userService).delete(sender);
         // WHEN
         // THEN

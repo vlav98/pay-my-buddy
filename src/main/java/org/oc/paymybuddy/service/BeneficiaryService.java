@@ -1,6 +1,7 @@
 package org.oc.paymybuddy.service;
 
 import jakarta.transaction.Transactional;
+import org.oc.paymybuddy.exceptions.AlreadyExistingUserException;
 import org.oc.paymybuddy.exceptions.BuddyNotFoundException;
 import org.oc.paymybuddy.model.Beneficiary;
 import org.oc.paymybuddy.model.Transaction;
@@ -45,12 +46,12 @@ public class BeneficiaryService {
         return beneficiaryLink;
     }
 
-    public Beneficiary create(Beneficiary beneficiary) throws Exception {
+    public Beneficiary create(Beneficiary beneficiary) throws AlreadyExistingUserException {
         boolean senderAlreadyHaveRecipient = beneficiaryRepository.existsBySenderAndRecipient(beneficiary.getSender(), beneficiary.getRecipient());
         if (!senderAlreadyHaveRecipient) {
             return beneficiaryRepository.save(beneficiary);
         } else {
-            throw new Exception("The sender already added the recipient in their friends list.");
+            throw new AlreadyExistingUserException("The sender already added the recipient in their friends list.");
         }
     }
 

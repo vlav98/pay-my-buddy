@@ -47,6 +47,7 @@ public class TransactionService {
         }
 
         sender.setBalance(sender.getBalance().subtract(amountWithFees));
+        recipient.setBalance(recipient.getBalance().add(BigDecimal.valueOf(amount)));
 
         Transaction transaction = new Transaction();
         transaction.setDescription(description);

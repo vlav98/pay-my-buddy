@@ -2,7 +2,9 @@ package org.oc.paymybuddy.controller;
 
 import jakarta.servlet.http.HttpSession;
 import org.oc.paymybuddy.constants.Pagination;
+import org.oc.paymybuddy.exceptions.AlreadyExistingUserException;
 import org.oc.paymybuddy.exceptions.BuddyNotFoundException;
+import org.oc.paymybuddy.exceptions.NotAuthenticatedException;
 import org.oc.paymybuddy.model.Transaction;
 import org.oc.paymybuddy.model.User;
 import org.oc.paymybuddy.model.dto.AmountAndFee;
@@ -77,9 +79,6 @@ public class TransactionController {
             beneficiaryService.addNewBeneficiary(userService.getAuthenticatedUser(), email);
             redirectAttributes.addFlashAttribute("successMessage", "Your buddy has been successfully added!");
             return "redirect:/transaction";
-        } catch (BuddyNotFoundException e) {
-            model.addAttribute("error", e.getMessage());
-            return "/add-beneficiary";
         } catch (Exception e) {
             model.addAttribute("error", "An error occurred while adding beneficiary.");
             return "/add-beneficiary";
