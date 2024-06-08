@@ -68,7 +68,7 @@ public class WebSecurityConfig {
         http.authenticationProvider(authenticationProvider())
             .authorizeHttpRequests((requests) ->
             requests
-                .requestMatchers("/login", "/signup").permitAll()
+                .requestMatchers("/login", "/signup", "/contact").permitAll()
                 .requestMatchers(antMatcher("/js/**")).permitAll()
                 .requestMatchers(antMatcher(HttpMethod.POST, "/user")).permitAll()
                 .requestMatchers(antMatcher(HttpMethod.PATCH, "/user")).hasRole("ADMIN")

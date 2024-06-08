@@ -1,9 +1,12 @@
 package org.oc.paymybuddy.controller;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.oc.paymybuddy.constants.Pagination;
 import org.oc.paymybuddy.exceptions.NotAuthenticatedException;
 import org.oc.paymybuddy.model.Beneficiary;
 import org.oc.paymybuddy.model.User;
+import org.oc.paymybuddy.model.dto.ContactMessage;
 import org.oc.paymybuddy.service.BeneficiaryService;
 import org.oc.paymybuddy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -24,6 +28,8 @@ public class FragmentsController {
     private UserService userService;
     @Autowired
     private BeneficiaryService beneficiaryService;
+
+    private static final Logger logger = LogManager.getLogger(FragmentsController.class.getName());
 
     @GetMapping("/profile")
     public String showProfile(Model model,
@@ -74,5 +80,13 @@ public class FragmentsController {
     @GetMapping("/contact")
     public String getContact() {
         return "contact";
+    }
+
+    @PostMapping("/contact")
+    public String sendContactMessage(@ModelAttribute ContactMessage contactMessage, RedirectAttributes redirectAttributes) {
+        logger.info("Received a message with object: {} and message content : {}",
+                contactMessage.getObject(), contactMessage.getMessageText());
+        redirectAttributes.addFlashAttribute("successMessage", "Your message has been received!");
+        return "redirect:/contact";
     }
 }

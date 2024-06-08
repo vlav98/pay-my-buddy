@@ -28,7 +28,7 @@ public class SignUpController {
     public String signup(@ModelAttribute User user, Model model) {
         try {
             userService.create(user);
-            logger.info("User created: " + user.getEmail());
+            logger.info("User created: {}", user.getEmail());
             return "redirect:/login";
         } catch (Exception e) {
             return "redirect:/signup";

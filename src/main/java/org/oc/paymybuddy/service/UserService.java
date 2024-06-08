@@ -3,7 +3,7 @@ package org.oc.paymybuddy.service;
 import jakarta.transaction.Transactional;
 import org.oc.paymybuddy.constants.Fee;
 import org.oc.paymybuddy.exceptions.AlreadyExistingUserException;
-import org.oc.paymybuddy.exceptions.InexistentUserException;
+import org.oc.paymybuddy.exceptions.NonexistentUserException;
 import org.oc.paymybuddy.exceptions.NotAuthenticatedException;
 import org.oc.paymybuddy.model.User;
 import org.oc.paymybuddy.repository.UserRepository;
@@ -39,22 +39,22 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void delete(User user) throws InexistentUserException {
+    public void delete(User user) throws NonexistentUserException {
         boolean existingUser = userRepository.existsByEmail(user.getEmail());
         if (existingUser) {
             userRepository.delete(user);
         } else {
-            throw new InexistentUserException("The user you're trying to delete doesn't exist.");
+            throw new NonexistentUserException();
         }
     }
 
-    public void update(User user) throws InexistentUserException {
+    public void update(User user) throws NonexistentUserException {
         User existingUser = userRepository.findUserByEmail(user.getEmail());
         if (existingUser != null) {
             existingUser.setPassword(user.getPassword());
             userRepository.save(existingUser);
         } else {
-            throw new InexistentUserException("The user you're trying to update doesn't exist.");
+            throw new NonexistentUserException();
         }
     }
 

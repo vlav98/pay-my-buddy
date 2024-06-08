@@ -134,10 +134,4 @@ public class TransactionController {
         return "redirect:/transaction";
     }
 
-    @GetMapping("/id")
-    public Optional<Transaction> getTransactionById(@PathVariable Integer id) {
-        return transactionService.getUserTransactionById(id);
-    }
-
-
 }
