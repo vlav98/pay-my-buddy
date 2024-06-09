@@ -5,7 +5,6 @@ import org.oc.paymybuddy.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Role;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
@@ -13,6 +12,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -58,11 +58,18 @@ public class WebSecurityConfig {
     }
 
     @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring()
+                .requestMatchers("/css/**","/js/**");
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authenticationProvider(authenticationProvider())
             .authorizeHttpRequests((requests) ->
             requests
-                .requestMatchers("/login", "/signup").permitAll()
+                .requestMatchers("/login", "/signup", "/contact").permitAll()
+                .requestMatchers(antMatcher("/js/**")).permitAll()
                 .requestMatchers(antMatcher(HttpMethod.POST, "/user")).permitAll()
                 .requestMatchers(antMatcher(HttpMethod.PATCH, "/user")).hasRole("ADMIN")
                 .requestMatchers(antMatcher(HttpMethod.DELETE, "/user")).hasRole("ADMIN")
@@ -73,7 +80,8 @@ public class WebSecurityConfig {
                         .loginPage("/login")
                         .usernameParameter("email")
                         .passwordParameter("password")
-                        .defaultSuccessUrl("/", true))
+                        .defaultSuccessUrl("/", true)
+                        .permitAll())
                 .rememberMe(rememberMeConfigurer -> rememberMeConfigurer.userDetailsService(userDetailsService()))
                 .logout((logout) -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))

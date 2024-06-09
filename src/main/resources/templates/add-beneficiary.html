@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{fragments/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{navigation.transfer}"></title>
+</head>
+<body>
+<div class="align-items-center container p-5 rounded" layout:fragment="content" th:remove="tag">
+    <div class="">
+        <div th:if="${error != null}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h4 class="mb-3" th:text="#{msg.AddBeneficiary}"></h4>
+            <form method="post" th:action="@{/transaction/add-beneficiary}">
+                <div class="form-group mb-3">
+                    <label for="email" th:text="#{user.email}"></label>
+                    <input type="email" th:value="${email}" class="form-control"
+                           id="email" placeholder="user@email.com" name="email" required>
+                </div>
+                <div class="row justify-content-center m-2">
+                    <div class="col">
+                    <button type="submit" class="btn btn-primary" th:text="#{transaction.connection}"></button>
+                    </div>
+                    <div class="col">
+                    <a type="button" class="btn btn-secondary text-white" th:href="@{/transaction}" th:text="#{form.cancel}"></a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

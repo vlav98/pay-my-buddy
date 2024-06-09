@@ -6,9 +6,10 @@ DROP TABLE Users CASCADE;
 CREATE TABLE users (
     userID int PRIMARY KEY NOT NULL AUTO_INCREMENT,
     first_name varchar(255) NOT NULL,
+    last_name varchar(255) NOT NULL,
     email varchar(255) NOT NULL,
     password varchar(255) NOT NULL,
-    balance int NOT NULL
+    balance DECIMAL(10,2) NOT NULL
 );
 
 CREATE TABLE bank_accounts (
@@ -38,16 +39,3 @@ CREATE TABLE beneficiary (
     FOREIGN KEY (recipient) REFERENCES users(userID)
 );
 
-INSERT INTO users (first_name, email, password)
-VALUES ('User1','user1@example.com', 'password1'),
-    ('User2','user2@example.com', 'password2');
-
-INSERT INTO bank_accounts (email, RIB, userID)
-VALUES ('user1@example.com', 'FR1234567890123456789012345', 1),
-    ('user2@example.com', 'FR9876543210987654321012345', 2);
-
-INSERT INTO beneficiary (sender, recipient)
-VALUES (1, 2), (2, 1);
-
-INSERT INTO transactions (transactionID, sender_id, recipient, description, amount, bank_accountID)
-VALUES (1, 2, 'user2@example.com', 'Payment for Book', 100.00, 2);

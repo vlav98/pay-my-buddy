@@ -35,8 +35,8 @@ public class LoginController {
     public ResponseEntity<Void> login(@RequestBody LoginRequest loginRequest) {
         Authentication authenticationRequest =
                 UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.username(), loginRequest.password());
-        logger.info("Received POST Request : /login with username : " + loginRequest.username +
-                " and password : " + loginRequest.password());
+        logger.info("Received POST Request : /login with username : {} and password : {}",
+                loginRequest.username,  loginRequest.password());
         try {
             Authentication authenticationResponse = this.authenticationManager.authenticate(authenticationRequest);
             SecurityContextHolder.getContext().setAuthentication(authenticationResponse);
@@ -52,5 +52,4 @@ public class LoginController {
 
     public record LoginRequest(String username, String password) {
     }
-
 }

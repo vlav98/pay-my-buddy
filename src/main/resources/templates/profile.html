@@ -5,15 +5,70 @@
       layout:decorate="~{fragments/layout}">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="#{navigation.profile}">Profile</title>
 </head>
 <body>
 <div layout:fragment="content" th:remove="tag">
-    <h1 th:text="#{}"></h1>
-    <p>This is an unsecured page, but you can access the secured pages after authenticating.</p>
-    <ul>
-        <li>Go to the <a href="/user" th:href="@{/user}">secured pages</a></li>
-    </ul>
+    <h2>My Profile</h2>
+    <div class="col mb-3" id="current-balance">
+        <div class="row mb-2" id="current-balance-title">
+            <h4>Current balance</h4>
+        </div>
+        <div class="container-fluid d-flex justify-content-between align-items-center" id="current-balance-body">
+            <div class="lead mr-auto" th:text="${user.balance}"></div>
+            <div class="justify-content-end">
+                <a class="btn btn-primary" th:href="@{/profile/update-balance}">Update balance</a>
+            </div>
+        </div>
+    </div>
+    <div class="card mb-3">
+        <div class="card-body">
+            <table class="table table-striped">
+                <tbody>
+                <tr>
+                    <th scope="row" th:text="#{user.first_name}"></th>
+                    <td th:text="${user.firstName}"></td> </tr>
+                <tr>
+                    <th scope="row" th:text="#{user.last_name}"></th>
+                    <td th:text="${user.lastName}"></td>
+                </tr>
+                <tr>
+                    <th scope="row" th:text="#{user.email}"></th>
+                    <td th:text="${user.email}"></td>
+                </tr>
+                <tr>
+                    <th scope="row"  th:text="#{user.amount}"></th>
+                    <td th:text="${user.balance}">€</td> </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <h4 th:text="#{msg.ListBeneficiary}"></h4>
+        <table class="table">
+            <thead>
+            <tr>
+                <th th:text="#{user.name}"></th>
+                <th th:text="#{user.email}"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${pagedList.content == null}">
+                <td></td>
+                <td>
+                    You don't have any transactions yet.
+                </td>
+                <td></td>
+            </tr>
+            <tr th:each="beneficiary: ${pagedList.content}">
+                <td th:text="${#strings.concat(beneficiary.firstName, ' ', beneficiary.lastName)}"></td>
+                <td th:text="${beneficiary.email}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="beneficiary-pagination" th:insert="fragments/pagination :: pagination"></div>
 </div>
 </body>
 </html>

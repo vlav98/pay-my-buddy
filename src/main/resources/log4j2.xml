@@ -11,10 +11,9 @@
     <Loggers>
         <Root level="info">
             <AppenderRef ref="ConsoleAppender" />
-<!--            <AppenderRef ref="FileAppender" />-->
+            <AppenderRef ref="FileAppender" />
         </Root>
         <Logger name="com.oc.pay-my-buddy" level="info">
-<!--            <AppenderRef ref="ConsoleAppender" />-->
             <AppenderRef ref="FileAppender" />
         </Logger>
     </Loggers>

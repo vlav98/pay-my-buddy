@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{fragments/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{navigation.home}"></title>
+</head>
+<body>
+<div class="align-items-center container p-5 rounded" layout:fragment="content" th:remove="tag">
+    <div class="container">
+        <h1 th:text="#{welcome.message(${user.firstName})}"></h1>
+    </div>
+
+    <div class="container">
+        <h2 th:text="${#strings.concat(user.firstName, ' ', user.lastName)}"></h2>
+        <p th:text="#{balance.currentBalance} + ': ' + ${#strings.concat(#strings.replace(user.balance, ',', '.'), ' €')}"></p>
+    </div>
+
+    <div class="container-fluid d-flex justify-content-between align-items-center mb-3">
+        <h4 class="lead mr-auto my-auto" th:text="#{transaction.title}"></h4>
+        <a id="send-money"
+           class="btn btn-primary justify-content-end"
+           th:text="#{transaction.connection}"
+           href="transaction/add-beneficiary"
+           th:href="@{/transaction/add-beneficiary}">
+        </a>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <td class="col" th:text="#{user.name}"></td>
+                <td class="col" th:text="#{user.email}"></td>
+            </tr>
+        </thead>
+        <tbody>
+        <tr th:each="beneficiary: ${beneficiaries}">
+            <td th:text="${#strings.concat(beneficiary.firstName, ' ', beneficiary.lastName)}"></td>
+            <td th:text="${beneficiary.getEmail()}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

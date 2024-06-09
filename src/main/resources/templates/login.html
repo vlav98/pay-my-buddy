@@ -7,53 +7,77 @@
     <title th:text="#{msg.signIn}"></title>
 </head>
 <body>
-<div layout:fragment="content" th:remove="tag" class="container p-3 rounded">
-
-    <div class="container m-3 p-3 rounded alert">
-    <div th:if="${param.error}">
-        Invalid username and password.</div>
-    <div th:if="${param.logout}">
-        You have been logged out.</div>
+<div layout:fragment="content" th:remove="tag">
+    <div class="container">
+        <div th:if="${param.error}" class="alert alert-danger" role="alert">
+            Invalid username and password.</div>
+        <div th:if="${param.logout}" class="alert alert-secondary" role="alert">
+            You have been logged out.</div>
+    </div>
+    <div class="container align-items-center mx-auto">
+        <div class="container bg-body-tertiary rounded px-5 py-3">
+        <form class="row mb-3"
+            id="login-form"
+            th:action="@{/login}"
+            method="post">
+            <div class="form-group mb-3">
+                <label for="email" class="form-label" th:text="#{user.email}"></label>
+                <input type="email" class="form-control"
+                       name="email" id="email"
+                       aria-describedby="emailHelpId"
+                       placeholder="name@email.com"
+                >
+            </div>
+            <div class="form-group mb-3">
+                <label for="password" class="form-label"  th:text="#{user.password}"></label>
+                <div class="input-group">
+                    <input type="password"
+                           class="form-control password-field"
+                           name="password"
+                           id="password"
+                    >
+                    <span class="input-group-btn">
+                        <button type="button" class="btn border" id="togglePassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group mb-3">
+                <div class="form-check">
+                <label class="form-check-label">
+                    <input type="checkbox" class="form-check-input"
+                           name="remember-me" id="remember-me"
+                           value="checkedValue" th:text="#{form.remember_me}">
+                </label>
+                </div>
+            </div>
+            <div class="form-group mb-3">
+            <button type="submit" name="signin" id="login"
+                    class="btn btn-primary btn-block"  th:text="#{msg.signIn}">
+            </button>
+            </div>
+        </form>
+        <div class="row container-fluid d-flex mx-auto my-auto">
+            <div class="col"><p class="" th:text="#{login.newHere}"></p></div>
+            <div class="col"><a th:href="@{/signup}" href="/signup" th:text="#{form.createAccount}"></a></div>
+        </div>
+    </div>
     </div>
 
-    <div class="align-items-center py-4 px-5 bg-body-tertiary col-6 mx-auto">
-    <form id="login-form"
-          th:action="@{/login}"
-          method="post"
-          class="mb-3">
-        <div class="form-group mb-3">
-            <label for="email" class="form-label" th:text="#{user.email}"></label>
-            <input type="email" class="form-control"
-                   name="email" id="email"
-                   aria-describedby="emailHelpId"
-                   placeholder="name@email.com"
-            >
-        </div>
-        <div class="form-group mb-3">
-            <label for="password" class="form-label"  th:text="#{user.password}"></label>
-            <input type="password"
-                   class="form-control"
-                   name="password"
-                   id="password"
-            >
-        </div>
-        <div class="form-group form-check mb-3">
-            <label class="form-check-label">
-                <input type="checkbox" class="form-check-input"
-                       name="remember-me" id="remember-me"
-                       value="checkedValue" th:text="#{form.remember_me}">
-            </label>
-        </div>
-        <button type="submit" name="signin" id="login"
-                class="btn btn-primary btn-lg btn-block"  th:text="#{msg.signIn}">
-        </button>
-    </form>
-    <div class="row  mx-auto my-auto">
-        <p class="text-center">
-            New here? <a th:href="@{/signup}" href="/signup">Create an account</a>
-        </p>
-    </div>
-    </div>
+    <script type="text/javascript">
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordField = document.getElementById('password');
+            const icon = document.querySelector('#togglePassword i');
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                icon.className = 'fas fa-eye';
+            } else {
+                passwordField.type = "password";
+                icon.className = 'fas fa-eye-slash';
+            }
+        });
+    </script>
 </div>
 </body>
 </html>

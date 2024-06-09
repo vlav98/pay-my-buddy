@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{fragments/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{navigation.transfer}"></title>
+</head>
+<body>
+<div class="align-items-center container p-3 rounded" layout:fragment="content" th:remove="tag">
+    <div th:if="${error != null}"
+         class="alert alert-danger"
+         role="alert"
+         th:text="${error}"></div>
+    <div th:if="${successMessage}"
+         class="alert alert-success"
+         role="alert"
+         th:text="${successMessage}"></div>
+
+    <div class="container">
+        <h2 th:text="${connectedUser.firstName}"></h2>
+        <p th:text="#{balance.currentBalance} + ': ' + ${#strings.concat(#strings.replace(connectedUser.balance, ',', '.'), ' €')}"></p>
+    </div>
+
+    <div class="container-fluid d-flex justify-content-between align-items-center mb-3">
+        <h4 class="lead mr-auto my-auto" th:text="#{transaction.title}"></h4>
+        <a id="send-money"
+           class="btn btn-primary justify-content-end"
+           th:text="#{transaction.connection}"
+           href="transaction/add-beneficiary"
+           th:href="@{/transaction/add-beneficiary}">
+        </a>
+    </div>
+
+    <form class="container-fluid p-3 rounded bg-body-tertiary d-flex mb-3"
+          id="money-box"
+          th:action="@{/transaction/pay}"
+          th:object="${transactionForm}"
+          method="post">
+        <div class="flex-grow-1">
+            <div class="container form-outline">
+                <label class="form-label" for="beneficiary" th:text="#{beneficiary.label}"></label>
+                <select class="form-select" name="beneficiary" id="beneficiary"
+                        th:field="*{recipient}" required>
+                    <option value="" th:text="#{user.email}"></option>
+                    <option th:each="beneficiaries: ${beneficiaries}"
+                            th:value="${beneficiaries.getEmail()}"
+                            th:text="${beneficiaries.getEmail()}"
+                    ></option>
+                </select>
+            </div>
+        </div>
+        <div class="flex-grow-1">
+            <div class="container form-outline">
+                <label class="form-label" for="amount" th:text="#{transaction.amount}"></label>
+                <input type="number" step="0.01"
+                       id="amount" class="form-control"
+                       name="amount" th:field="*{amount}"
+                       required min="0.01" />
+            </div>
+        </div>
+        <div class="flex-grow-2 d-flex align-items-center">
+            <button type="submit" class="btn btn-primary" role="button"
+                    name="action"
+                    href="/pay" th:href="@{/transaction/pay}"
+                    th:text="#{transaction.pay}"
+                    value="redirect"></button>
+        </div>
+    </form>
+
+    <div class="container-fluid">
+        <h4>My transactions</h4>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Connections</th>
+                <th>Description</th>
+                <th>Amount</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${pagedList.content == null}">
+                <td></td>
+                <td>
+                    You don't have any transactions yet.
+                </td>
+                <td></td>
+            </tr>
+            <tr th:each="transaction: ${pagedList.content}">
+                <td th:text="${transaction.getRecipient()}"></td>
+                <td th:text="${transaction.getDescription()}"></td>
+                <td th:text="${#strings.concat(#strings.replace(transaction.amount, ',', '.'), ' €')}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="transaction-pagination" th:insert="fragments/pagination :: pagination"></div>
+</div>
+</body>
+</html>
