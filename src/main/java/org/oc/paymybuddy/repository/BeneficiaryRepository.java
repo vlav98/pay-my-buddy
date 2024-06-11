@@ -8,8 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BeneficiaryRepository extends JpaRepository<Beneficiary, Integer> {
     Iterable<Beneficiary> findBeneficiariesBySender(Integer sender);
-
     boolean existsBySenderAndRecipient(Integer sender, Integer recipient);
 
-    Beneficiary getBeneficiaryBySenderAndRecipient(Integer sender, Integer recipient);
 }
