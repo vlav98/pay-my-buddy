@@ -28,7 +28,8 @@ CREATE TABLE transactions (
     description varchar(255) NOT NULL,
     amount int NOT NULL,
     bank_accountID INT NOT NULL,
-    FOREIGN KEY (bank_accountID) REFERENCES bank_accounts(bank_accountID)
+    FOREIGN KEY (bank_accountID) REFERENCES bank_accounts(bank_accountID),
+    transaction_date TIMESTAMP NOT NULL
 );
 
 CREATE TABLE beneficiary (

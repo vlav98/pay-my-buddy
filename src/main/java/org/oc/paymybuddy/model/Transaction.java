@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.util.Objects;
 
 @Getter
@@ -26,17 +27,20 @@ public class Transaction {
     private BigDecimal amount;
     @Column(name = "bank_accountID")
     private Integer bankAccountID;
+    @Column(name = "transaction_date")
+    private Date transactionDate;
+
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Transaction that = (Transaction) o;
-        return Objects.equals(senderID, that.senderID) && Objects.equals(recipient, that.recipient) && Objects.equals(description, that.description) && Objects.equals(amount, that.amount) && Objects.equals(bankAccountID, that.bankAccountID);
+        return Objects.equals(transactionID, that.transactionID) && Objects.equals(senderID, that.senderID) && Objects.equals(recipient, that.recipient) && Objects.equals(description, that.description) && Objects.equals(amount, that.amount) && Objects.equals(bankAccountID, that.bankAccountID) && Objects.equals(transactionDate, that.transactionDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(senderID, recipient, description, amount, bankAccountID);
+        return Objects.hash(transactionID, senderID, recipient, description, amount, bankAccountID, transactionDate);
     }
 }
