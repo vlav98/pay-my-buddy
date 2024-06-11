@@ -28,7 +28,7 @@ public class Transaction {
     @Column(name = "bank_accountID")
     private Integer bankAccountID;
     @Column(name = "transaction_date")
-    private Date transactionDate;
+    private Date date;
 
 
     @Override
@@ -36,11 +36,11 @@ public class Transaction {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Transaction that = (Transaction) o;
-        return Objects.equals(transactionID, that.transactionID) && Objects.equals(senderID, that.senderID) && Objects.equals(recipient, that.recipient) && Objects.equals(description, that.description) && Objects.equals(amount, that.amount) && Objects.equals(bankAccountID, that.bankAccountID) && Objects.equals(transactionDate, that.transactionDate);
+        return Objects.equals(transactionID, that.transactionID) && Objects.equals(senderID, that.senderID) && Objects.equals(recipient, that.recipient) && Objects.equals(description, that.description) && Objects.equals(amount, that.amount) && Objects.equals(bankAccountID, that.bankAccountID) && Objects.equals(date, that.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(transactionID, senderID, recipient, description, amount, bankAccountID, transactionDate);
+        return Objects.hash(transactionID, senderID, recipient, description, amount, bankAccountID, date);
     }
 }

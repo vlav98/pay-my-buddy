@@ -15,9 +15,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -59,25 +56,13 @@ public class TransactionService {
         transaction.setAmount(BigDecimal.valueOf(amount));
         transaction.setSenderID(sender.getUserID());
         transaction.setRecipient(recipient.getEmail());
-        transaction.setTransactionDate(java.sql.Date.valueOf(LocalDate.now()));
+        transaction.setDate(java.sql.Date.valueOf(LocalDate.now()));
 
         return transactionRepository.save(transaction);
     }
 
-    public Iterable<Transaction> getTransactions() {
-        return transactionRepository.findAll();
-    }
-
-    public Optional<Transaction> getUserTransactionById(Integer id) {
-        return transactionRepository.findById(id);
-    }
-
     public List<Transaction> getAllUserTransactionsByUser(User user) {
-        return transactionRepository.findAllBySenderIDOrRecipient(user.getUserID(), user.getEmail());
-    }
-
-    public Iterable<Transaction> getCurrentUserTransaction(User user) {
-        return transactionRepository.getTransactionBySenderID(user.getUserID());
+        return transactionRepository.findAllBySenderIDOrRecipientOrderByDateDesc(user.getUserID(), user.getEmail());
     }
 
     public Page<?> findPaginatedResults(Pageable pageable, User user) {
