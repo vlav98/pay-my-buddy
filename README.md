@@ -1,6 +1,6 @@
 # Pay My Buddy
 
-This is the 6th project of 
+This is the 6th project of Openclassrooms's Java Developper Training Path.
 
 Summary
 -------
